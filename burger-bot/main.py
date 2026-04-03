@@ -11,6 +11,7 @@ from config import Config
 from character_ui import BurgerUI
 from voice_engine import VoiceEngine
 from command_handler import CommandHandler
+from admin_panel import AdminPanel
 import automation
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 class BurgerApp:
     def __init__(self):
         self.cmd_handler = CommandHandler()
+        self.settings_window = None
         
         # Initialize Voice engine
         self.voice_engine = VoiceEngine(
@@ -29,8 +31,16 @@ class BurgerApp:
         # Initialize UI (needs to run on main thread)
         self.ui = BurgerUI(
             start_voice_engine=self.start_systems,
-            command_handler_fn=self.on_command_received
+            command_handler_fn=self.on_command_received,
+            open_settings_fn=self.toggle_settings
         )
+
+    def toggle_settings(self):
+        """Launch or focus personal customization panel."""
+        if self.settings_window is None or not self.settings_window.winfo_exists():
+            self.settings_window = AdminPanel(self.ui)
+        else:
+            self.settings_window.focus()
 
     def on_state_change(self, state, text):
         """Called by voice engine to push updates to the UI."""

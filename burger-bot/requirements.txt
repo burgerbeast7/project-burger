@@ -6,3 +6,7 @@ pyttsx3==2.98
 SpeechRecognition==3.14.1
 pillow==11.1.0
 pytest==8.3.5
+flask==3.0.3
+flask-cors==4.0.1
+gTTS==2.5.1
+pygame==2.5.2

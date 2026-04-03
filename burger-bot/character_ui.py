@@ -4,7 +4,7 @@ import math
 import threading
 
 class BurgerUI(tk.Tk):
-    def __init__(self, start_voice_engine, command_handler_fn):
+    def __init__(self, start_voice_engine, command_handler_fn, open_settings_fn):
         super().__init__()
         self.title("BURGER")
         self.geometry("400x500")
@@ -35,13 +35,20 @@ class BurgerUI(tk.Tk):
         self.canvas.bind("<ButtonPress-1>", self.on_drag_start)
         self.canvas.bind("<B1-Motion>", self.on_drag_motion)
         
-        # Context menu (right click to exit)
+        # Context menu (right click)
         self.canvas.bind("<Button-3>", self.on_right_click)
 
         # Callbacks setup
         self.start_voice_engine = start_voice_engine
         self.command_handler_fn = command_handler_fn
+        self.open_settings_fn = open_settings_fn
         
+        # Context Menu object
+        self.menu = tk.Menu(self, tearoff=0, bg="#212121", fg="white", activebackground="#FF9800", font=("Arial", 10))
+        self.menu.add_command(label="⚙️ Settings", command=self.open_settings_fn)
+        self.menu.add_separator()
+        self.menu.add_command(label="❌ Exit", command=self.destroy)
+
         self.draw_burger()
         self.animate()
         
@@ -58,8 +65,11 @@ class BurgerUI(tk.Tk):
         self.geometry(f"+{x}+{y}")
         
     def on_right_click(self, event):
-        """Right click to exit application."""
-        self.destroy()
+        """Right click to show context menu."""
+        try:
+            self.menu.tk_popup(event.x_root, event.y_root)
+        finally:
+            self.menu.grab_release()
 
     def update_state(self, state, text):
         """Update character state and UI label. Called from any thread."""

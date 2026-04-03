@@ -1,0 +1,210 @@
+/* Burger Bot Web Styles - Premium & Interactive */
+:root {
+  --primary-color: #FF9800;
+  --secondary-color: #f44336;
+  --bg-color: #121212;
+  --accent-color: #00d4ff;
+  --text-color: #e0e0e0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+#app {
+  width: 100%;
+  max-width: 500px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Character Styling */
+#character-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#burger-character {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  transition: transform 0.3s ease-out;
+}
+
+/* Idle Hover Animation */
+#burger-character.idle {
+  animation: hover 3s ease-in-out infinite;
+}
+
+@keyframes hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+#burger-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Glow Aura Animation */
+#glow {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#burger-character.listening #glow {
+  opacity: 1;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { fill: rgba(255, 152, 0, 0.4); r: 85; }
+  50% { fill: rgba(255, 152, 0, 0.2); r: 95; }
+}
+
+/* Eye Blink Animation */
+#eyes {
+  animation: blink 4s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 95%, 100% { transform: scaleY(1); }
+  97.5% { transform: scaleY(0.1); }
+}
+
+/* Thinking Animation */
+#thinking-dots {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+#thinking-dots.hidden { display: none; }
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+.dot.d1 { animation-delay: 0s; background-color: var(--primary-color); }
+.dot.d2 { animation-delay: 0.2s; background-color: var(--accent-color); }
+.dot.d3 { animation-delay: 0.4s; background-color: var(--secondary-color); }
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 1; }
+}
+
+/* UI Elements */
+#ui-overlay {
+  width: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 40px 40px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+h1 {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  color: var(--primary-color);
+  text-transform: uppercase;
+}
+
+p#sub-status {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+/* Chat Bubble Styling */
+#chat-bubble {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px 20px;
+  border-radius: 20px;
+  max-width: 90%;
+  margin: 10px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+#chat-bubble.hidden { opacity: 0; transform: translateY(10px); }
+
+/* Mic Button */
+#mic-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary-color);
+  font-size: 2rem;
+  color: #121212;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(255, 152, 0, 0.5);
+  transition: transform 0.2s, background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mic-btn:active { transform: scale(0.9); }
+
+#mic-btn.listening {
+  background: var(--secondary-color);
+  box-shadow: 0 4px 20px rgba(244, 67, 54, 0.6);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(244, 67, 54, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+}
+
+/* Mouth Animation (Speaking) */
+#burger-character.speaking #mouth {
+  animation: talk 0.4s ease-in-out infinite;
+  stroke: var(--secondary-color);
+  stroke-width: 5;
+}
+
+@keyframes talk {
+  0%, 100% { d: path("M85 100 Q100 110 115 100"); }
+  50% { d: path("M85 105 Q100 125 115 105"); }
+}
+
+.hidden { visibility: hidden; }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BURGER AI – Your Interactive Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3075/3075977.png">
+</head>
+<body>
+    <div id="app">
+        <!-- Floating Burger Character -->
+        <div id="character-container">
+            <div id="burger-character" class="idle">
+                <!-- SVG Burger -->
+                <svg viewBox="0 0 200 200" id="burger-svg">
+                    <!-- Glow Aura (Visible if listening) -->
+                    <circle id="glow" cx="100" cy="100" r="85" fill="rgba(255, 152, 0, 0.2)" />
+                    
+                    <!-- Top Bun -->
+                    <path class="bun top" d="M30 100 Q100 20 170 100" fill="#E49B0F" />
+                    <!-- Lettuce -->
+                    <path d="M25 105 Q60 115 100 105 Q140 115 175 105" stroke="#4CAF50" stroke-width="10" fill="none" class="lettuce"/>
+                    <!-- Tomato -->
+                    <rect x="35" y="115" width="130" height="8" fill="#F44336" class="tomato"/>
+                    <!-- Cheese -->
+                    <polygon points="30,123 60,140 100,123 140,140 170,123" fill="#FFEB3B" class="cheese"/>
+                    <!-- Patty -->
+                    <rect x="25" y="130" width="150" height="20" rx="10" fill="#5D4037" class="patty"/>
+                    <!-- Bottom Bun -->
+                    <path class="bun bottom" d="M30 145 Q100 210 170 145" fill="#E49B0F" />
+
+                    <!-- Eyes -->
+                    <g id="eyes">
+                        <circle id="eye-l-bg" cx="75" cy="80" r="8" fill="white"/>
+                        <circle id="eye-l-pupil" cx="75" cy="80" r="4" fill="black"/>
+                        <circle id="eye-r-bg" cx="125" cy="80" r="8" fill="white"/>
+                        <circle id="eye-r-pupil" cx="125" cy="80" r="4" fill="black"/>
+                    </g>
+                    
+                    <!-- Mouth -->
+                    <path id="mouth" d="M85 100 Q100 110 115 100" stroke="#3E2723" stroke-width="3" fill="none" stroke-linecap="round"/>
+                </svg>
+                
+                <!-- Thinking Dots (Hidden by default) -->
+                <div id="thinking-dots" class="hidden">
+                    <div class="dot d1"></div>
+                    <div class="dot d2"></div>
+                    <div class="dot d3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ui-overlay">
+            <h1 id="status-text">TAP TO START</h1>
+            <p id="sub-status">Ready for your command</p>
+            
+            <div id="chat-bubble" class="hidden">
+                <p id="chat-text">Welcome back, Boss!</p>
+            </div>
+
+            <!-- Tap/Speak Button -->
+            <button id="mic-btn" class="ready">
+                <span id="mic-icon">🎤</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>

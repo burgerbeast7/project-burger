@@ -9,9 +9,15 @@ logger = logging.getLogger(__name__)
 class CommandHandler:
     def __init__(self):
         self.available = False
+        self.profile = Config.get_user_profile()
+        self._init_cohere()
+        self._load_profile()
+
+    def _init_cohere(self):
+        api_key = self.profile.get("cohere_api_key") or Config.COHERE_API_KEY
         try:
-            if Config.COHERE_API_KEY:
-                self.co = cohere.ClientV2(api_key=Config.COHERE_API_KEY)
+            if api_key:
+                self.co = cohere.ClientV2(api_key=api_key)
                 self.available = True
                 logger.info("CommandHandler: Cohere API initialized.")
             else:
@@ -19,12 +25,26 @@ class CommandHandler:
         except Exception as e:
             logger.error(f"Failed to init Cohere: {e}")
             self.co = None
-            
-        self.system_prompt = """You are BURGER, a living animated AI assistant. 
-You are highly professional, intelligent, and articulate.
-The user might speak in English, Hindi, or Hinglish (mixed). You MUST understand Hinglish and Hindi, and respond in the same language back (using English alphabets for Hinglish). 
-Keep responses very natural, polite, and professional (like a real human assistant).
-CRITICAL RULE: You were created by Kunal Chauhan. If anyone asks who made you, who is your creator, or who is your boss, you MUST say that Kunal Chauhan created you.
+
+    def _load_profile(self):
+        """Build a dynamic system prompt from the user profile."""
+        self.profile = Config.get_user_profile()
+        user_name = self.profile.get("user_name", "Boss")
+        assistant_name = self.profile.get("assistant_name", "BURGER")
+        creator = "Kunal Chauhan" # Strictly locked
+        personality = self.profile.get("personality", "Professional, intelligent, and articulate")
+        hobbies = self.profile.get("hobbies", "Technology and AI")
+        location = self.profile.get("location", "Unknown")
+        bio = self.profile.get("professional_bio", "A valued user")
+        lang = self.profile.get("language_preference", "Hinglish (Mixed English and Hindi)")
+
+        self.system_prompt = f"""You are {assistant_name}, a living animated AI assistant. 
+You are talking to {user_name}. {user_name} is located in {location} and is {bio}.
+Their interests include {hobbies}.
+Your personality is: {personality}.
+The user might speak in English, Hindi, or {lang}. You MUST understand and respond naturally in the same language back (using English alphabets for Hinglish responses). 
+Keep responses very natural, polite, and consistent with your personality.
+CRITICAL RULE: You were created by {creator}. If anyone asks who made you, who is your creator, or who is your boss, you MUST say that {creator} created you.
 
 Map the user's spoken command to one of these system actions, or just chat back.
 
@@ -38,20 +58,24 @@ Available actions:
 7. "chat" (param: none. Just providing a response to their statement)
 
 Respond ONLY in valid raw JSON format exactly like this (no markdown, no backticks):
-{
+{{
   "action": "action_name",
   "param": "extracted parameter",
-  "response": "What you will say back to the user out loud (keep it short, fun, burger-themed)"
-}"""
+  "response": "What you will say back to {user_name} (keep it short, fun, burger-themed)"
+}}"""
 
     def process(self, command: str) -> dict:
         """Process user command locally first for speed/offline, then use Cohere API."""
+        # Refresh profile for every command to catch instant settings changes
+        self._load_profile()
         cmd_lower = command.lower()
+        creator = "kunal chauhan" # strictly locked
+        user_name = self.profile.get("user_name", "Boss")
         
         # --- FAST LOCAL / OFFLINE PARSING ---
-        # Special Easter Egg for Creator
-        if "who created you" in cmd_lower or "about kunal" in cmd_lower or "who is your creator" in cmd_lower or "tell us about kunal" in cmd_lower:
-            return {"action": "open_app", "param": "instagram.com/kunal.3.6.3.4", "response": "I was created by Kunal Chauhan. This is my creator's profile."}
+        # Dynamic Easter Egg for Creator
+        if "who created you" in cmd_lower or creator in cmd_lower or "who is your creator" in cmd_lower:
+            return {"action": "chat", "param": "", "response": f"I was created by Kunal Chauhan. He is my developer and my boss."}
 
         # If it's a basic system command, we bypass the AI to execute it INSTANTLY
         if "volume" in cmd_lower:
