@@ -1,0 +1,8 @@
+customtkinter==5.2.2
+cohere==5.13.8
+PyPDF2==3.0.1
+python-docx==1.1.2
+pyttsx3==2.98
+SpeechRecognition==3.14.1
+pillow==11.1.0
+pytest==8.3.5
