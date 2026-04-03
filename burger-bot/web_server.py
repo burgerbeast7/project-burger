@@ -63,6 +63,7 @@ def get_settings():
     return jsonify(safe_profile)
 
 if __name__ == '__main__':
-    # Run on 0.0.0.0 so other devices (phones) on the same Wi-Fi can connect!
-    logger.info("🍔 Burger Web Server starting on port 5000...")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    # Cloud-ready: Use the PORT environment variable provided by Render or default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    logger.info(f"🍔 Burger Web Server launching on cloud port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False)
